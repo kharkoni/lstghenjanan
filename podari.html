@@ -2,10 +2,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>PODARI | Portfolio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
 <style>
-  :root { --accent:#000000; --accent-r:0; --accent-g:0; --accent-b:0; --panel:rgba(40,40,40,0.45); --glass-blur:6px; --vol-blur:5px; --glow-alpha:0.21; --cursor-size:18px; --cursor-border:2px; --cursor-color: rgba(255,255,255,.9); --cursor-shadow:"0 0 20.4px rgba(255,255,255,0.41500000000000004)"; }
-  html, body { margin:0; height:100%; overflow:hidden; font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif; color:#fff; background:#000; cursor:none }
+  :root { --accent:#120321; --accent-r:18; --accent-g:3; --accent-b:33; --panel:rgba(40,40,40,0.45); --glass-blur:3px; --vol-blur:7px; --glow-alpha:0.21; --cursor-size:18px; --cursor-border:2px; --cursor-color: rgba(255,255,255,.9); --cursor-shadow:"0 0 20.4px rgba(255,255,255,0.41500000000000004)"; }
+  html, body { margin:0; height:100%; overflow:hidden; font-family:'Merriweather',serif; color:#fff; background:#000; cursor:none }
   .sys-cursor{cursor:auto} .sys-cursor #cursor{display:none}
   #fx{position:fixed;inset:0;z-index:5;pointer-events:none}
   #cursor{position:fixed;z-index:200;pointer-events:none;transform:translate(-50%,-50%);width:var(--cursor-size);height:var(--cursor-size)}
@@ -16,11 +16,11 @@
   .overlay{ position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; cursor:pointer; }
   .enter-text{ font-size:2rem; color:#00aaff; text-shadow:0 0 10px #00aaff,0 0 20px #00aaff; }
   .profile-wrap{ position:relative; z-index:10; height:100%; display:flex; align-items:center; justify-content:center; }
-  .glass-card{ background: rgba(20,20,22,0.35); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 0 24px rgba(0,0,0,0.21); padding: 20px 26px; max-width: 440px; text-align:center; }
-  .profile img{ width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); box-shadow: 0 0 16px rgba(0,0,0,0.21); }
+  .glass-card{ background: rgba(20,20,22,0.35); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 0 24px rgba(18,3,33,0.21); padding: 20px 26px; max-width: 440px; text-align:center; }
+  .profile img{ width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); box-shadow: 0 0 16px rgba(18,3,33,0.21); }
   .name{ font-size:1.8rem; font-weight:700; margin-top:0.6rem; }
   .tagline{ opacity:.9; margin-top:0.3rem; font-size:0.95rem; }
-  .presence{margin-top:12px; display:none;}
+  .presence{margin-top:12px; display:block;}
   .pres-card{display:flex;align-items:center;gap:10px;background:rgba(20,20,22,.35);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
   .pres-av{position:relative;width:40px;height:40px;border-radius:50%;overflow:hidden}
   .pres-av img{width:100%;height:100%;object-fit:cover;display:block}
@@ -30,14 +30,14 @@
   .pres-name{font-weight:700}
   .pres-act{color:#b5bac1;font-size:.92rem}
   .icons{ margin-top:1.2rem; display:flex; gap:1.2rem; justify-content:center; }
-  .icons a{ font-size:1.4rem; color:var(--accent); text-shadow: 0 0 8px rgba(0,0,0,0.21); }
+  .icons a{ font-size:1.4rem; color:var(--accent); text-shadow: 0 0 8px rgba(18,3,33,0.21); }
   .audio-controls{position:fixed;top:16px;left:16px;z-index:100;display:flex;align-items:center;gap:12px}
   .sound-btn{background:rgba(0,0,0,.5);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1.4rem;cursor:pointer;border:none;backdrop-filter:blur(var(--vol-blur));-webkit-backdrop-filter:blur(var(--vol-blur))}
   .sound-btn:hover{background:rgba(0,0,0,.6);transform:scale(1.06)}
   .sound-btn:hover + .volume-container, .volume-container:hover{width:150px;padding:0 15px}
   .volume-container{display:flex;align-items:center;width:0;overflow:hidden;transition:all .3s;background:rgba(0,0,0,.5);border-radius:25px;backdrop-filter:blur(var(--vol-blur));-webkit-backdrop-filter:blur(var(--vol-blur));height:50px}
   .volume-slider{width:100%;-webkit-appearance:none;height:6px;background:#333;border-radius:3px;outline:none}
-  .volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(0,0,0,0.21)}
+  .volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(18,3,33,0.21)}
   .footer{position:fixed;bottom:10px;width:100%;text-align:center;font-size:.8rem;color:#94a3b8;opacity:.85;pointer-events:none}
 </style></head><body class="sys-cursor">
 <canvas id="fx"></canvas><div id="cursor" class="circle"></div>
@@ -48,11 +48,10 @@
     <div class="profile">
       <img src="ponline.png" alt="Profile Picture" />
       <div class="name">PODARI</div>
-      <div class="tagline"></div>
+      <div class="tagline">🧡:,اِیّاکَنَعْبُدُوَاِیّاکَنَسْتَعِیْنُ “</div>
       <div class="presence" id="presence"></div>
       <div class="icons">
-        <a href="https://deletedaccount4501"><i class="fab fa-discord"></i></a>
-        <a href="https://Jad"><i class="fab fa-spotify"></i></a>
+        <a href="#"><i class="fab fa-spotify"></i></a>
 </div>
     </div>
   </div>
@@ -88,6 +87,18 @@
     }
   })();
 </script>
-
+<script>(function(){
+  const container=document.getElementById('presence'); if(!container) return;
+  function avatarUrl(id,hash,size){return hash?('https://cdn.discordapp.com/avatars/'+id+'/'+hash+'.png?size='+(size||128)):'https://cdn.discordapp.com/embed/avatars/0.png';}
+  function pick(acts){const order=[0,1,3,5,2];for(const t of order){const h=(acts||[]).find(a=>a.type===t);if(h) return h;}return null;}
+  function label(a){if(!a) return '';const s=a.state?(' — '+a.state):'';switch(a.type){case 0:return 'Playing '+a.name+s;case 1:return 'Streaming '+a.name+s;case 2:return 'Listening to '+a.name+s;case 3:return 'Watching '+a.name+s;case 5:return 'Competing in '+a.name+s;default:return a.name||'';}}
+  function esc(x){return String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function render(d){const st=d.discord_status||'offline', dot=(st==='online'?'online':(st==='idle'?'idle':(st==='dnd'?'dnd':'')));
+    container.innerHTML='<div class="pres-card"><div class="pres-av"><img alt="Avatar" src="'+avatarUrl(d.discord_user.id,d.discord_user.avatar,128)+'"><div class="pres-dot '+dot+'"></div></div>'
+      +'<div class="pres-info"><div class="pres-name">'+esc(d.discord_user.display_name||d.discord_user.username||'Discord User')+'</div>'
+      +'<div class="pres-act">'+esc(label(pick(d.activities)))+'</div></div></div>'; container.style.display='block';}
+  async function tick(){try{const r=await fetch('https://api.lanyard.rest/v1/users/1116090657719717960',{cache:'no-store'});const j=await r.json();if(j&&j.success) render(j.data);}catch(e){}}
+  tick(); setInterval(tick,15000);
+})();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body></html>
