@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Lookup - ALQULOL</title>
+    <link href="weblookupstyle.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-globe-americas"></i>
+                <span>ALQULOL</span>
+            </div>
+            <div class="nav-user">
+                <span class="welcome-text">Advanced Website Analysis Platform</span>
+                <button class="btn btn-outline" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i> Home
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    
+
+    <!-- Website Lookup Container -->
+    <div class="lookup-container">
+        <!-- URL Input Section -->
+        <div class="lookup-form-section">
+            <div class="section-header">
+                <h2><i class="fas fa-search"></i> Website Analysis</h2>
+                <p>Enter any website URL to get comprehensive insights and detailed analysis</p>
+            </div>
+            <div class="lookup-form-card">
+                <form id="lookup-form" class="modern-form">
+                    <div class="form-group">
+                        <label for="website-url">
+                            <i class="fas fa-link"></i> Website URL
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="url" id="website-url" placeholder="https://example.com" required>
+                            <div class="input-decoration"></div>
+                        </div>
+                        <small class="form-help">Enter the complete URL including https:// or http://</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-search"></i>
+                        <span>Analyze Website</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+                
+                <div class="features-preview">
+                    <div class="feature-item">
+                        <i class="fas fa-server"></i>
+                        <span>Hosting Details</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>SEO Insights</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-code"></i>
+                        <span>Tech Stack</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loading-section" class="lookup-section hidden">
+            <div class="loading-card">
+                <div class="loading-animation">
+                    <div class="loading-circle">
+                        <div class="loading-inner"></div>
+                    </div>
+                    <div class="loading-pulse"></div>
+                </div>
+                <h3>Analyzing Website...</h3>
+                <div class="loading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="analysis-progress"></div>
+                        <div class="progress-glow"></div>
+                    </div>
+                    <div class="loading-status" id="loading-status">Initializing analysis...</div>
+                </div>
+                <div class="loading-steps">
+                    <div class="step" id="step-1"><i class="fas fa-circle-notch fa-spin"></i> Connecting to website</div>
+                    <div class="step" id="step-2"><i class="fas fa-circle"></i> Analyzing domain information</div>
+                    <div class="step" id="step-3"><i class="fas fa-circle"></i> Checking hosting details</div>
+                    <div class="step" id="step-4"><i class="fas fa-circle"></i> Gathering security info</div>
+                    <div class="step" id="step-5"><i class="fas fa-circle"></i> Finalizing analysis</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="lookup-section hidden">
+            <div class="results-header">
+                <div class="results-badge">
+                    <i class="fas fa-check-circle"></i>
+                    Analysis Complete
+                </div>
+                <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+                <div class="analyzed-url">
+                    <strong>Analyzed URL:</strong> <span id="analyzed-url"></span>
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <!-- Domain Information -->
+                <div class="result-card domain-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Domain Information</h3>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-tag"></i> Domain</span>
+                            <span class="info-value" id="domain-name"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-plug"></i> Port</span>
+                            <span class="info-value" id="website-port"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-shield-alt"></i> Protocol</span>
+                            <span class="info-value" id="website-protocol"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-list"></i> DNS Records</span>
+                            <span class="info-value" id="dns-records"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-server"></i> Nameservers</span>
+                            <span class="info-value" id="nameservers"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hosting Information -->
+                <div class="result-card hosting-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3>Hosting Information</h3>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-building"></i> Provider</span>
+                            <span class="info-value" id="hosting-provider"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-map-marker-alt"></i> Location</span>
+                            <span class="info-value" id="server-location"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-network-wired"></i> IP Address</span>
+                            <span class="info-value" id="ip-address"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-server"></i> Web Server</span>
+                            <span class="info-value" id="web-server"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-cloud"></i> CDN</span>
+                            <span class="info-value" id="cdn-info"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Information -->
+                <div class="result-card tech-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Technical Stack</h3>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-cogs"></i> Framework</span>
+                            <span class="info-value" id="cms-framework"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-code"></i> Language</span>
+                            <span class="info-value" id="programming-language"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-certificate"></i> SSL</span>
+                            <span class="info-value" id="ssl-info"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-tachometer-alt"></i> Load Time</span>
+                            <span class="info-value" id="load-time"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-tools"></i> Technologies</span>
+                            <span class="info-value" id="technologies"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Information -->
+                <div class="result-card security-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Security Analysis</h3>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-lock"></i> Headers</span>
+                            <span class="info-value" id="security-headers"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-shield-check"></i> HTTPS</span>
+                            <span class="info-value" id="https-status"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-award"></i> SSL Rating</span>
+                            <span class="info-value" id="ssl-rating"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-virus"></i> Malware Check</span>
+                            <span class="info-value" id="malware-check"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-ban"></i> Blacklist Status</span>
+                            <span class="info-value" id="blacklist-status"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Information -->
+                <div class="result-card seo-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>SEO Analysis</h3>
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-heading"></i> Title</span>
+                            <span class="info-value" id="title-tag"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-align-left"></i> Description</span>
+                            <span class="info-value" id="meta-description"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-heading"></i> H1 Tags</span>
+                            <span class="info-value" id="h1-tags"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-images"></i> Images</span>
+                            <span class="info-value" id="images-count"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-link"></i> Links</span>
+                            <span class="info-value" id="links-count"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Source Code Access -->
+                <div class="result-card download-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3>Source Code Access</h3>
+                    </div>
+                    <div class="download-section">
+                        <p>Download the complete source code and assets</p>
+                        <button class="btn btn-primary" id="download-source-btn">
+                            <i class="fas fa-download"></i>
+                            <span>Download Source</span>
+                        </button>
+                        <div class="download-info">
+                            <small><i class="fas fa-info-circle"></i> Requires authorization for security compliance</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-actions">
+                <button class="btn btn-secondary" onclick="resetAnalysis()">
+                    <i class="fas fa-redo"></i> Analyze Another
+                </button>
+                <button class="btn btn-primary" onclick="exportResults()">
+                    <i class="fas fa-file-export"></i> Export Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Unauthorized Access Modal -->
+        <div id="unauthorized-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Access Restricted</h3>
+                    <button class="modal-close" onclick="closeUnauthorizedModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="unauthorized-content">
+                        <div class="unauthorized-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Authorization Required</h4>
+                        <p>Source code download requires special permissions. Please contact our support team to request access.</p>
+                        <div class="user-ip-display">
+                            <strong>Your IP Address:</strong> <span id="user-ip-address"></span>
+                        </div>
+                        <div class="unauthorized-actions">
+                            <button class="btn btn-primary" onclick="openDiscordTicket()">
+                                <i class="fab fa-discord"></i> Contact Support
+                            </button>
+                            <button class="btn btn-outline" onclick="closeUnauthorizedModal()">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-globe-americas"></i>
+                <span>ALQULOL</span>
+            </div>
+            <p>&copy; 2025 ALQULOL. Advanced Website Intelligence Platform.</p>
+        </div>
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="attached_assets/antidev (3)_1758320393152.js"></script>
+    <script src="weblookupscript.js"></script>
+</body>
+</html>
