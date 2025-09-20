@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>AlQUlOl Analyzer</title>
+  <title>WebLink Analyzer</title>
   <style>
     * {
       margin: 0;
@@ -19,6 +20,139 @@
       color: #ffffff;
       position: relative;
       overflow-x: hidden;
+    }
+
+    /* Warning Page Styles */
+    .warning-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #ff0000, #8B0000, #ff4444, #cc0000);
+      background-size: 400% 400%;
+      animation: warningBackground 2s ease-in-out infinite alternate;
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .warning-page.show {
+      display: flex;
+    }
+
+    @keyframes warningBackground {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .warning-content {
+      text-align: center;
+      padding: 50px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 5px solid #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+      animation: warningPulse 1s ease-in-out infinite alternate;
+      max-width: 90%;
+    }
+
+    @keyframes warningPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+      }
+      100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 80px rgba(255, 0, 0, 1);
+      }
+    }
+
+    .warning-skull {
+      font-size: 8rem;
+      margin-bottom: 20px;
+      animation: skull-shake 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes skull-shake {
+      0% { transform: rotate(-5deg); }
+      100% { transform: rotate(5deg); }
+    }
+
+    .warning-title {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 1);
+      margin-bottom: 20px;
+      animation: textFlicker 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes textFlicker {
+      0% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    .warning-message {
+      font-size: 1.8rem;
+      color: #ffcccc;
+      margin-bottom: 30px;
+      line-height: 1.4;
+    }
+
+    .ip-display {
+      background: rgba(255, 0, 0, 0.3);
+      border: 2px solid #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      margin-bottom: 30px;
+      animation: ipGlow 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes ipGlow {
+      0% {
+        background: rgba(255, 0, 0, 0.3);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      }
+      100% {
+        background: rgba(255, 0, 0, 0.6);
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+      }
+    }
+
+    .warning-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .warning-btn {
+      padding: 15px 30px;
+      background: linear-gradient(45deg, #ff0000, #cc0000);
+      color: #ffffff;
+      border: 3px solid #ffffff;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .warning-btn:hover {
+      background: linear-gradient(45deg, #cc0000, #ff0000);
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
     }
 
     /* Animated background layers */
@@ -684,6 +818,14 @@
       .filter-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .warning-title {
+        font-size: 2.5rem;
+      }
+
+      .warning-message {
+        font-size: 1.3rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -704,14 +846,46 @@
       .links-section {
         padding: 25px;
       }
+
+      .warning-content {
+        padding: 30px;
+      }
+
+      .warning-title {
+        font-size: 2rem;
+      }
+
+      .warning-message {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Warning Page -->
+  <div id="warningPage" class="warning-page">
+    <div class="warning-content">
+      <div class="warning-skull">💀</div>
+      <h1 class="warning-title">⚠️ WARNING! ⚠️</h1>
+      <p class="warning-message">
+        UNAUTHORIZED DOMAIN DETECTED!<br>
+        You have entered a restricted domain pattern.<br>
+        This activity has been logged and monitored.
+      </p>
+      <div id="ipDisplay" class="ip-display">
+        🌐 Your IP Address: Loading...
+      </div>
+      <div class="warning-buttons">
+        <button class="warning-btn" onclick="closeWarning()">I Understand</button>
+        <button class="warning-btn" onclick="clearInput()">Clear Input</button>
+      </div>
+    </div>
+  </div>
+
   <div class="main-container">
     <header class="header">
-      <h1>ALQUlOl Analyzer</h1>
+      <h1>WebLink Analyzer</h1>
       <p class="subtitle">Extract and analyze all links from any website</p>
     </header>
 
@@ -784,7 +958,100 @@
     </div>
   </div>
 
+  <!-- Audio for warning sound -->
+  <audio id="warningSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmYhGASA" type="audio/wav">
+  </audio>
+
   <script>
+    // Global user IP variable
+    let userIP = 'Unknown';
+
+    // Get user IP address
+    async function getUserIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        userIP = data.ip;
+      } catch (error) {
+        try {
+          const response = await fetch('https://ipinfo.io/json');
+          const data = await response.json();
+          userIP = data.ip;
+        } catch (error2) {
+          userIP = 'IP Detection Failed';
+        }
+      }
+    }
+
+    // Warning system for alqulol.xyz domain
+    function checkForRestrictedDomain(input) {
+      const restrictedPatterns = [
+        /alqulol\.xyz/i,
+        /alqulol/i,
+        /https?:\/\/.*alqulol/i,
+        /.*alqulol.*\.xyz/i
+      ];
+
+      return restrictedPatterns.some(pattern => pattern.test(input));
+    }
+
+    function showWarning() {
+      const warningPage = document.getElementById('warningPage');
+      const ipDisplay = document.getElementById('ipDisplay');
+      const warningSound = document.getElementById('warningSound');
+      
+      // Update IP display
+      ipDisplay.innerHTML = `🌐 Your IP Address: <strong>${userIP}</strong>`;
+      
+      // Show warning page
+      warningPage.classList.add('show');
+      
+      // Play warning sound
+      try {
+        warningSound.play().catch(e => {
+          // Create synthetic warning sound if audio fails
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+          oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.3);
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.6);
+          
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 1);
+        });
+      } catch (e) {
+        console.log('Audio playback failed');
+      }
+      
+      // Log the incident
+      console.warn(`🚨 SECURITY ALERT: Restricted domain detected from IP ${userIP} at ${new Date().toISOString()}`);
+      
+      // Optionally send to a logging service (commented out for security)
+      // fetch('/log-security-incident', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ ip: userIP, timestamp: new Date().toISOString(), domain: 'alqulol.xyz' })
+      // });
+    }
+
+    function closeWarning() {
+      document.getElementById('warningPage').classList.remove('show');
+    }
+
+    function clearInput() {
+      document.getElementById('urlInput').value = '';
+      closeWarning();
+    }
+
     // Anti-dev tools protection
     (function() {
         function detectDevTools() {
@@ -840,6 +1107,21 @@
           if (e.key === 'Enter') this.scanWebsite();
         });
 
+        // Check for restricted domain on input
+        this.urlInput.addEventListener('input', (e) => {
+          if (checkForRestrictedDomain(e.target.value)) {
+            showWarning();
+          }
+        });
+
+        this.urlInput.addEventListener('paste', (e) => {
+          setTimeout(() => {
+            if (checkForRestrictedDomain(e.target.value)) {
+              showWarning();
+            }
+          }, 100);
+        });
+
         // Filter buttons
         document.querySelectorAll('.filter-button').forEach(btn => {
           btn.addEventListener('click', (e) => {
@@ -856,6 +1138,12 @@
 
         if (!url) {
           this.showError('Please enter a valid URL');
+          return;
+        }
+
+        // Check for restricted domain before scanning
+        if (checkForRestrictedDomain(url)) {
+          showWarning();
           return;
         }
 
@@ -1418,8 +1706,9 @@
       }
     }
 
-    // Initialize the scanner when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initialize the scanner and get IP when the page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      await getUserIP();
       new URLScanner();
     });
   </script>
