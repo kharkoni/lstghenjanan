@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator & Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a1128;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(25, 118, 210, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(100, 181, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(66, 165, 245, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a1128 0%, #1a237e 50%, #0d47a1 100%);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(100, 181, 246, 0.03) 2px, rgba(100, 181, 246, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(100, 181, 246, 0.03) 2px, rgba(100, 181, 246, 0.03) 4px);
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #64b5f6, transparent);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #42a5f5, transparent);
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #1976d2, transparent);
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        h1 {
+            color: #64b5f6;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: rgba(100, 181, 246, 0.2);
+            color: #64b5f6;
+            border: 2px solid #64b5f6;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn:hover {
+            background: #64b5f6;
+            color: #0f2027;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.4);
+        }
+
+        .tab-btn.active {
+            background: #64b5f6;
+            color: #0f2027;
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            background: rgba(15, 32, 39, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #90caf9;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="tel"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #42a5f5;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+            background: rgba(100, 181, 246, 0.1);
+            color: #e3f2fd;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #64b5f6;
+            background: rgba(100, 181, 246, 0.15);
+            box-shadow: 0 0 15px rgba(100, 181, 246, 0.3);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #90caf9;
+            opacity: 0.6;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select option {
+            background: #0f2027;
+            color: #e3f2fd;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(66, 165, 245, 0.6);
+            background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .qr-result {
+            margin-top: 30px;
+            text-align: center;
+            padding: 30px;
+            background: rgba(100, 181, 246, 0.1);
+            border-radius: 15px;
+            display: none;
+            border: 2px solid rgba(100, 181, 246, 0.3);
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .download-btns {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .type-card {
+            padding: 20px;
+            background: rgba(100, 181, 246, 0.1);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(100, 181, 246, 0.3);
+            color: #90caf9;
+        }
+
+        .type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(100, 181, 246, 0.3);
+            border-color: #64b5f6;
+        }
+
+        .type-card.active {
+            border-color: #64b5f6;
+            background: linear-gradient(135deg, rgba(25, 118, 210, 0.3) 0%, rgba(66, 165, 245, 0.3) 100%);
+            color: #64b5f6;
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.4);
+        }
+
+        .type-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .scanner-container {
+            text-align: center;
+        }
+
+        h2 {
+            color: #64b5f6;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: none;
+            border: 2px solid #42a5f5;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .scan-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 15px;
+            border: 2px solid #4caf50;
+            display: none;
+        }
+
+        .scan-result h3 {
+            color: #81c784;
+            margin-bottom: 10px;
+        }
+
+        .scan-result p {
+            color: #c8e6c9;
+            word-break: break-all;
+            font-size: 1.1em;
+        }
+
+        .size-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            padding: 8px 16px;
+            background: rgba(100, 181, 246, 0.2);
+            border: 2px solid #42a5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #90caf9;
+            font-weight: 600;
+        }
+
+        .size-btn:hover {
+            background: rgba(100, 181, 246, 0.3);
+            border-color: #64b5f6;
+        }
+
+        .size-btn.active {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
+            box-shadow: 0 3px 10px rgba(25, 118, 210, 0.4);
+        }
+
+        .upload-area {
+            border: 3px dashed #42a5f5;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            background: rgba(100, 181, 246, 0.05);
+            color: #90caf9;
+        }
+
+        .upload-area:hover {
+            background: rgba(100, 181, 246, 0.15);
+            border-color: #64b5f6;
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.3);
+        }
+
+        .upload-area.dragover {
+            background: rgba(100, 181, 246, 0.25);
+            border-color: #64b5f6;
+        }
+
+        .upload-area h3 {
+            color: #64b5f6;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                padding-bottom: 100px;
+            }
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 17, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid rgba(100, 181, 246, 0.3);
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        footer p {
+            color: #90caf9;
+            font-size: 0.95em;
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        footer a {
+            color: #64b5f6;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0 5px;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #64b5f6, #1976d2);
+            transition: width 0.3s;
+        }
+
+        footer a:hover {
+            color: #42a5f5;
+            text-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+        .footer-icon {
+            display: inline-block;
+            animation: pulse 2s infinite;
+            margin: 0 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <h1> QR Code Generator & Scanner by Alqulol</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('generate')">📱 Generate QR</button>
+            <button class="tab-btn" onclick="switchTab('scan')">📷 Scan QR</button>
+        </div>
+
+        <!-- Generate Tab -->
+        <div id="generate" class="tab-content active">
+            <h2 style="margin-bottom: 20px;">Choose QR Code Type</h2>
+            
+            <div class="type-selector">
+                <div class="type-card active" onclick="selectType('url')">
+                    <div class="icon">🔗</div>
+                    <div>Website URL</div>
+                </div>
+                <div class="type-card" onclick="selectType('text')">
+                    <div class="icon">📝</div>
+                    <div>Plain Text</div>
+                </div>
+                <div class="type-card" onclick="selectType('email')">
+                    <div class="icon">📧</div>
+                    <div>Email</div>
+                </div>
+                <div class="type-card" onclick="selectType('phone')">
+                    <div class="icon">📞</div>
+                    <div>Phone</div>
+                </div>
+                <div class="type-card" onclick="selectType('sms')">
+                    <div class="icon">💬</div>
+                    <div>SMS</div>
+                </div>
+                <div class="type-card" onclick="selectType('wifi')">
+                    <div class="icon">📶</div>
+                    <div>WiFi</div>
+                </div>
+            </div>
+
+            <div id="url-form" class="qr-form">
+                <div class="input-group">
+                    <label>Website URL</label>
+                    <input type="url" id="url-input" placeholder="https://example.com">
+                </div>
+            </div>
+
+            <div id="text-form" class="qr-form" style="display: none;">
+                <div class="input-group">
+                    <label>Text Content</label>
+                    <textarea id="text-input" placeholder="Enter any text..."></textarea>
+                </div>
+            </div>
+
+            <div id="email-form" class="qr-form" style="display: none;">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email-input" placeholder="example@email.com">
+                </div>
+                <div class="input-group">
+                    <label>Subject (Optional)</label>
+                    <input type="text" id="email-subject" placeholder="Email subject">
+                </div>
+                <div class="input-group">
+                    <label>Message (Optional)</label>
+                    <textarea id="email-body" placeholder="Email message"></textarea>
+                </div>
+            </div>
+
+            <div id="phone-form" class="qr-form" style="display: none;">
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone-input" placeholder="+1234567890">
+                </div>
+            </div>
+
+            <div id="sms-form" class="qr-form" style="display: none;">
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="sms-phone" placeholder="+1234567890">
+                </div>
+                <div class="input-group">
+                    <label>Message</label>
+                    <textarea id="sms-message" placeholder="SMS message"></textarea>
+                </div>
+            </div>
+
+            <div id="wifi-form" class="qr-form" style="display: none;">
+                <div class="input-group">
+                    <label>Network Name (SSID)</label>
+                    <input type="text" id="wifi-ssid" placeholder="MyWiFi">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="text" id="wifi-password" placeholder="password123">
+                </div>
+                <div class="input-group">
+                    <label>Security Type</label>
+                    <select id="wifi-security">
+                        <option value="WPA">WPA/WPA2</option>
+                        <option value="WEP">WEP</option>
+                        <option value="nopass">No Password</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>QR Code Size</label>
+                <div class="size-options">
+                    <button class="size-btn" onclick="setSize(128)">Small</button>
+                    <button class="size-btn active" onclick="setSize(256)">Medium</button>
+                    <button class="size-btn" onclick="setSize(512)">Large</button>
+                    <button class="size-btn" onclick="setSize(1024)">Extra Large</button>
+                </div>
+            </div>
+
+            <button class="btn" onclick="generateQR()">🎨 Generate QR Code</button>
+
+            <div class="qr-result" id="qr-result">
+                <div id="qrcode"></div>
+                <div class="download-btns">
+                    <button class="btn" onclick="downloadQR('png')">📥 Download PNG</button>
+                </div>
+                <div id="url-display" style="margin-top: 20px; display: none;">
+                    <button class="btn" onclick="openURL()" style="background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);">
+                        🔗 Open URL in New Tab
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Tab -->
+        <div id="scan" class="tab-content">
+            <div class="scanner-container">
+                <h2 style="margin-bottom: 20px;">Scan QR Code</h2>
+                
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+                    <div style="font-size: 3em; margin-bottom: 10px;">📁</div>
+                    <h3 style="margin-bottom: 10px;">Upload QR Code Image</h3>
+                    <p style="color: #90caf9;">Click to browse or drag & drop an image</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="scanFromFile(event)">
+                </div>
+
+                <div style="text-align: center; margin: 20px 0; color: #64b5f6; font-weight: 600;">OR</div>
+
+                <button class="btn" onclick="startCamera()" id="camera-btn">📷 Use Camera to Scan</button>
+                <button class="btn" onclick="stopCamera()" id="stop-btn" style="display: none; background: linear-gradient(135deg, #f44336 0%, #e57373 100%);">⏹️ Stop Camera</button>
+
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+
+                <div class="scan-result" id="scan-result">
+                    <h3>✅ QR Code Detected!</h3>
+                    <p id="scan-text"></p>
+                    <button class="btn" onclick="copyResult()" style="margin-top: 15px;">📋 Copy to Clipboard</button>
+                    <button class="btn" onclick="openScannedURL()" id="open-scanned-btn" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);">
+                        🔗 Open URL in New Tab
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentType = 'url';
+        let qrSize = 256;
+        let stream = null;
+        let scanning = false;
+        let currentURL = '';
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            
+            if (tab === 'scan') {
+                stopCamera();
+            }
+        }
+
+        function selectType(type) {
+            currentType = type;
+            
+            document.querySelectorAll('.type-card').forEach(card => card.classList.remove('active'));
+            event.target.closest('.type-card').classList.add('active');
+            
+            document.querySelectorAll('.qr-form').forEach(form => form.style.display = 'none');
+            document.getElementById(type + '-form').style.display = 'block';
+        }
+
+        function setSize(size) {
+            qrSize = size;
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function getQRData() {
+            let data = '';
+            
+            switch(currentType) {
+                case 'url':
+                    data = document.getElementById('url-input').value;
+                    break;
+                case 'text':
+                    data = document.getElementById('text-input').value;
+                    break;
+                case 'email':
+                    const email = document.getElementById('email-input').value;
+                    const subject = document.getElementById('email-subject').value;
+                    const body = document.getElementById('email-body').value;
+                    data = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    break;
+                case 'phone':
+                    data = 'tel:' + document.getElementById('phone-input').value;
+                    break;
+                case 'sms':
+                    const phone = document.getElementById('sms-phone').value;
+                    const message = document.getElementById('sms-message').value;
+                    data = `sms:${phone}?body=${encodeURIComponent(message)}`;
+                    break;
+                case 'wifi':
+                    const ssid = document.getElementById('wifi-ssid').value;
+                    const password = document.getElementById('wifi-password').value;
+                    const security = document.getElementById('wifi-security').value;
+                    data = `WIFI:T:${security};S:${ssid};P:${password};;`;
+                    break;
+            }
+            
+            return data;
+        }
+
+        function generateQR() {
+            const data = getQRData();
+            
+            if (!data) {
+                alert('Please enter data for the QR code!');
+                return;
+            }
+            
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            new QRCode(qrcodeDiv, {
+                text: data,
+                width: qrSize,
+                height: qrSize,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show URL open button if it's a URL type
+            if (currentType === 'url') {
+                currentURL = data;
+                document.getElementById('url-display').style.display = 'block';
+            } else {
+                document.getElementById('url-display').style.display = 'none';
+            }
+            
+            document.getElementById('qr-result').style.display = 'block';
+            document.getElementById('qr-result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openURL() {
+            if (currentURL) {
+                window.open(currentURL, '_blank');
+            }
+        }
+
+        function downloadQR(format) {
+            const qrcodeDiv = document.getElementById('qrcode');
+            const canvas = qrcodeDiv.querySelector('canvas');
+            const url = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'qrcode.png';
+            a.click();
+        }
+
+        // Scanner functions
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                video.style.display = 'block';
+                
+                document.getElementById('camera-btn').style.display = 'none';
+                document.getElementById('stop-btn').style.display = 'inline-block';
+                
+                scanning = true;
+                scanQRCode();
+            } catch (err) {
+                alert('Camera access denied or not available: ' + err.message);
+            }
+        }
+
+        function stopCamera() {
+            scanning = false;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                document.getElementById('video').style.display = 'none';
+                document.getElementById('camera-btn').style.display = 'inline-block';
+                document.getElementById('stop-btn').style.display = 'none';
+            }
+        }
+
+        function scanQRCode() {
+            if (!scanning) return;
+            
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    showScanResult(code.data);
+                    stopCamera();
+                    return;
+                }
+            }
+            
+            requestAnimationFrame(scanQRCode);
+        }
+
+        function scanFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0);
+                    
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    if (code) {
+                        showScanResult(code.data);
+                    } else {
+                        alert('No QR code found in the image!');
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showScanResult(data) {
+            document.getElementById('scan-text').textContent = data;
+            
+            // Check if it's a URL
+            const isURL = /^https?:\/\//i.test(data);
+            if (isURL) {
+                currentURL = data;
+                document.getElementById('open-scanned-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('open-scanned-btn').style.display = 'none';
+            }
+            
+            document.getElementById('scan-result').style.display = 'block';
+            document.getElementById('scan-result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openScannedURL() {
+            if (currentURL) {
+                window.open(currentURL, '_blank');
+            }
+        }
+
+        function copyResult() {
+            const text = document.getElementById('scan-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied to clipboard!');
+            });
+        }
+
+        // Drag and drop
+        const uploadArea = document.getElementById('upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const event = { target: { files: [file] } };
+                scanFromFile(event);
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Powered by <a href="https://alqulol.xyz" target="_blank">ALQULOL</a>
+        </p>
+    </footer>
+</body>
+</html>
