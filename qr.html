@@ -309,8 +309,10 @@
         }
 
         .type-card .icon {
-            font-size: 2em;
+            font-size: 1.5em;
             margin-bottom: 10px;
+            font-weight: 700;
+            color: #64b5f6;
         }
 
         .scanner-container {
@@ -484,7 +486,8 @@
         .footer-icon {
             display: inline-block;
             animation: pulse 2s infinite;
-            margin: 0 5px;
+            margin: 0 8px;
+            font-size: 1.2em;
         }
 
         @keyframes pulse {
@@ -502,11 +505,11 @@
     </div>
 
     <div class="container">
-        <h1> QR Code Generator & Scanner by Alqulol</h1>
+        <h1>QR Code Generator & Scanner</h1>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('generate')">📱 Generate QR</button>
-            <button class="tab-btn" onclick="switchTab('scan')">📷 Scan QR</button>
+            <button class="tab-btn active" onclick="switchTab('generate')">Generate QR</button>
+            <button class="tab-btn" onclick="switchTab('scan')">Scan QR</button>
         </div>
 
         <!-- Generate Tab -->
@@ -515,27 +518,27 @@
             
             <div class="type-selector">
                 <div class="type-card active" onclick="selectType('url')">
-                    <div class="icon">🔗</div>
+                    <div class="icon">URL</div>
                     <div>Website URL</div>
                 </div>
                 <div class="type-card" onclick="selectType('text')">
-                    <div class="icon">📝</div>
+                    <div class="icon">TXT</div>
                     <div>Plain Text</div>
                 </div>
                 <div class="type-card" onclick="selectType('email')">
-                    <div class="icon">📧</div>
+                    <div class="icon">@</div>
                     <div>Email</div>
                 </div>
                 <div class="type-card" onclick="selectType('phone')">
-                    <div class="icon">📞</div>
+                    <div class="icon">TEL</div>
                     <div>Phone</div>
                 </div>
                 <div class="type-card" onclick="selectType('sms')">
-                    <div class="icon">💬</div>
+                    <div class="icon">SMS</div>
                     <div>SMS</div>
                 </div>
                 <div class="type-card" onclick="selectType('wifi')">
-                    <div class="icon">📶</div>
+                    <div class="icon">WiFi</div>
                     <div>WiFi</div>
                 </div>
             </div>
@@ -616,16 +619,16 @@
                 </div>
             </div>
 
-            <button class="btn" onclick="generateQR()">🎨 Generate QR Code</button>
+            <button class="btn" onclick="generateQR()">Generate QR Code</button>
 
             <div class="qr-result" id="qr-result">
                 <div id="qrcode"></div>
                 <div class="download-btns">
-                    <button class="btn" onclick="downloadQR('png')">📥 Download PNG</button>
+                    <button class="btn" onclick="downloadQR('png')">Download PNG</button>
                 </div>
                 <div id="url-display" style="margin-top: 20px; display: none;">
                     <button class="btn" onclick="openURL()" style="background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);">
-                        🔗 Open URL in New Tab
+                        Open URL in New Tab
                     </button>
                 </div>
             </div>
@@ -637,7 +640,7 @@
                 <h2 style="margin-bottom: 20px;">Scan QR Code</h2>
                 
                 <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
-                    <div style="font-size: 3em; margin-bottom: 10px;">📁</div>
+                    <div style="font-size: 3em; margin-bottom: 10px; font-weight: 700; color: #64b5f6;">↑</div>
                     <h3 style="margin-bottom: 10px;">Upload QR Code Image</h3>
                     <p style="color: #90caf9;">Click to browse or drag & drop an image</p>
                     <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="scanFromFile(event)">
@@ -645,18 +648,18 @@
 
                 <div style="text-align: center; margin: 20px 0; color: #64b5f6; font-weight: 600;">OR</div>
 
-                <button class="btn" onclick="startCamera()" id="camera-btn">📷 Use Camera to Scan</button>
-                <button class="btn" onclick="stopCamera()" id="stop-btn" style="display: none; background: linear-gradient(135deg, #f44336 0%, #e57373 100%);">⏹️ Stop Camera</button>
+                <button class="btn" onclick="startCamera()" id="camera-btn">Use Camera to Scan</button>
+                <button class="btn" onclick="stopCamera()" id="stop-btn" style="display: none; background: linear-gradient(135deg, #f44336 0%, #e57373 100%);">Stop Camera</button>
 
                 <video id="video" autoplay playsinline></video>
                 <canvas id="canvas"></canvas>
 
                 <div class="scan-result" id="scan-result">
-                    <h3>✅ QR Code Detected!</h3>
+                    <h3>QR Code Detected!</h3>
                     <p id="scan-text"></p>
-                    <button class="btn" onclick="copyResult()" style="margin-top: 15px;">📋 Copy to Clipboard</button>
+                    <button class="btn" onclick="copyResult()" style="margin-top: 15px;">Copy to Clipboard</button>
                     <button class="btn" onclick="openScannedURL()" id="open-scanned-btn" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);">
-                        🔗 Open URL in New Tab
+                        Open URL in New Tab
                     </button>
                 </div>
             </div>
@@ -890,7 +893,7 @@
         function copyResult() {
             const text = document.getElementById('scan-text').textContent;
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Copied to clipboard!');
+                alert('Copied to clipboard!');
             });
         }
 
