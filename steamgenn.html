@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alqulol Steam Genn</title>
+
+  <!-- Styles -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      border: none;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000; /* pure black, remove gradients */
+      color: white;
+      overflow: hidden; /* prevents scrolling */
+    }
+
+    body::before {
+      content: '';
+      display: none; /* remove blue radial effects */
+    }
+
+    main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem; /* reduced padding */
+    }
+
+    .card {
+      width: 90%;
+      max-width: 800px;
+      background: #111; /* darker neutral */
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* neutral shadow */
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 4.2rem;
+      margin-bottom: 1rem;
+      color: #00aaff;
+      text-shadow: none;
+    }
+
+    p.lead {
+      font-size: 1.6rem;
+      margin-bottom: 2.5rem;
+      color: #cfcfcf;
+      line-height: 1.6;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 2rem 4rem;
+      background: #444; /* neutral tone */
+      border-radius: 60px;
+      font-size: 2.2rem;
+      color: white;
+      font-weight: 700;
+      letter-spacing: .08rem;
+      cursor: pointer;
+      transition: transform .25s ease, box-shadow .25s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    }
+
+    .cta:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal {
+      width: 90%;
+      max-width: 720px;
+      background: #0b0b0b;
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: left;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      border: 1px solid #222;
+    }
+
+    .modal h3 {
+      font-size: 2.2rem;
+      color: #00aaff;
+      margin-bottom: .5rem;
+    }
+
+    .modal p {
+      color: #ddd;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .modal .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn-outline {
+      padding: .8rem 1.2rem;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid #444;
+      color: #ddd;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      padding: .8rem 1.2rem;
+      border-radius: 8px;
+      background: #444; /* neutral */
+      color: white;
+      cursor: pointer;
+      border: 1px solid #555;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    }
+
+    footer {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1rem;
+      background: #111;
+      border-top: 1px solid #222;
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    @media (max-width:600px){
+      h1 { font-size: 2.4rem; }
+      .cta { padding: 1.2rem 2rem; font-size: 1.6rem; }
+      .card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+<main id="home">
+  <div class="card" role="main" aria-labelledby="main-title">
+    <h1 id="main-title">Alqulol Steam Genn</h1>
+    <p class="lead">
+Click on buttton below to start</strong>
+    </p>
+
+    <div style="display:flex; gap:1rem; justify-content:center; align-items:center; flex-direction:column;">
+      <button id="generateBtn" class="cta" aria-label="Generate Steam Accounts">Generate Steam</button>
+      <div style="margin-top:1rem; font-size:1.1rem; color:#cfcfcf;">Using Altronhost.host api </div>
+    </div>
+
+    <footer style="margin-top:2.5rem;">
+      <small>Built ur own tool using our API FREE Alqulol</small>
+    </footer>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal" role="document">
+    <h3>Open Discord Invite</h3>
+    <p>
+This Tool is only available in your discord > channels > ⚙️︱𝐒𝐭𝐞𝐚𝐦-𝐆𝐞𝐧𝐞𝐫𝐚𝐭𝐨𝐫 > generate unlimited accounts     </p>
+
+    <p style="font-weight:600; color:#ffdede;">
+click on (Open discord invite to join alqulol no role req free)
+    </p>
+
+    <div class="actions">
+      <button id="cancelModal" class="btn-outline">Cancel</button>
+      <button id="openDiscord" class="btn-primary">Open Discord Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- Global Footer -->
+<footer>
+  <div style="margin-bottom:1rem;">
+    <a href="#home" style="color:#00aaff; margin:0 1rem;">Home</a>|
+    <a href="https://discord.gg/4zTtMmb3tQ" target="_blank" rel="noopener" style="color:#00aaff; margin:0 1rem;">Discord</a>|
+    <a href="#" style="color:#00aaff; margin:0 1rem;">Privacy</a>
+  </div>
+  <div>
+    &copy; 2025 Alqulol. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  const generateBtn = document.getElementById('generateBtn');
+  const modal = document.getElementById('modalBackdrop');
+  const cancelBtn = document.getElementById('cancelModal');
+  const openDiscordBtn = document.getElementById('openDiscord');
+
+  generateBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  openDiscordBtn.addEventListener('click', () => {
+    window.open('https://discord.gg/4zTtMmb3tQ', '_blank', 'noopener,noreferrer');
+    modal.querySelector('p').textContent = 'Invite opened in a new tab. Join the server, read the rules, and communicate with staff if you need help.';
+    openDiscordBtn.textContent = 'Close';
+    cancelBtn.style.display = 'none';
+    openDiscordBtn.onclick = () => {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    };
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  });
+</script>
+
+</body>
+</html>
